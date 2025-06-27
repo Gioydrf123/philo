@@ -1,7 +1,7 @@
 #include "../inc/philo.h"
 
 
-// long get_timestamp(struct timeval *time_start)
+// long get_timestamp(struct timeval *t/ime_start)
 // {
 //   struct timeval now;
 //   gettimeofday(&now, NULL);
@@ -52,6 +52,10 @@ int create_forks(t_data_philo **data)
 		}
 		i++;
   }
+  for(int i = 0;i<(*data)->n_philo; ++i)
+  {
+    printf("%p\n",&(*data)->forks[i]);
+  }
   return (0);
 }
 
@@ -81,14 +85,62 @@ bool create_philos(t_data_philo **data)
   while(i < (*data)->n_philo)
   {
     (*data)->philos[i].id = i;
+    (*data)->philos[i].data = (*data); 
     i++;
   }
   return (false);
 }
 
-void *philosophers_routine(void *philo_pointer)
+void philo_eat(t_philo *philo_ptr)
 {
-  printf("ciao1\n");
+    if ((data->id % 2) == 0)
+     {
+      pthread_mutex_lock(&philo->data->forks[right_fork]);
+      printf("Philosoper %d has taken a fork\n",data->id);
+      pthread_mutex_lock(&philo->data->forks[left_fork]);
+      printf("Philosoper %d has taken a fork\n", data->id);
+     }
+     else
+     {
+      pthread_mutex_lock(&philo->data->forks[left_fork]);
+      printf("Philosoper %d has taken a fork\n", data->id);
+      pthread_mutex_lock(&philo->data->forks[right_fork]);
+      printf("Philosoper %d has taken a fork\n",data->id);
+     }
+     printf("Philosoper %d is eating\n",data->id);
+}
+void simulation_running(t_philo *philo_ptr)
+{
+  bool simulation_running = true;
+
+  while(simulation_running)
+  {
+    philo_eat(philo_ptr);
+    /* ATTENZIONE FUNZIONI DA IMPLEMENTARE LAVORARE SU QUESTE FUNZIONI SE POSSIBILE
+    SI CAPISCE COSA FANNO 
+    philo_sleep();
+    philo_think();*/
+  }
+}
+
+void *philosophers_routine(void *philo_ptr)
+{
+  t_philo *philo;
+  philo = (t_philo *)philo_ptr;
+  int left_fork = philo->id;
+  int right_fork = (philo->id + 1) % philo->data->n_philo;
+  // bool simulation_running= true;
+
+  printf("philo id: %d\n", philo->id);
+  printf("philo id: %d left fork: %d\n",philo->id, left_fork);
+  printf("philo id: %d pointer left fork: %p\n",philo->id, &philo->data->forks[left_fork]);
+  printf("philo id: %d right fork: %d\n",philo->id, right_fork);
+  printf("philo id: %d pointer right fork: %p\n",philo->id, &philo->data->forks[right_fork]);
+  printf("philo id: %d data address = %p\n", philo->id, &philo->data);
+
+
+  printf("filosofo id :%d\n", data->id);
+  printf("hello world");
 }
 
 int init_routine(t_data_philo **data)
@@ -97,9 +149,10 @@ int init_routine(t_data_philo **data)
   i = 0;
   while (i < (*data)->n_philo)
   {
+    (*data)->id = i;
     if (pthread_create(&(*data)->ids[i], NULL, &philosophers_routine, &(*data)->philos[i]))
       return printf("error in thread creation\n");
-    sleep(1);
+    usleep(1);
     i++;
   }
   while (i-- > 0)
@@ -127,13 +180,9 @@ int main(int argc, char **argv)
     free_p(&data);
     return (1);
   }
-
-  for (int i = 0; i < data->n_philo; i++)
-  {
-    printf("philo id: %d\n", data->philos[i].id);
-  }
+  printf("original data address: %p\n", data);
   init_routine(&data);
-    
+
   free_p(&data);
   return (0);
 }

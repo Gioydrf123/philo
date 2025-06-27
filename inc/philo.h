@@ -12,7 +12,7 @@ typedef struct t_name_philo
 	// struct timeval *start_time;
 	// pthread_mutex_t *fork_left;
 	// pthread_mutex_t *fork_right;
-
+	struct t_name_data_philo *data;
 }	t_philo;
 
 typedef struct t_name_data_philo
@@ -25,6 +25,7 @@ typedef struct t_name_data_philo
 	t_philo *philos;
 	pthread_t *ids;
 	pthread_mutex_t *forks;
+        int id;
 }	t_data_philo;
 
 
