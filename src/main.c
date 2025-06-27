@@ -92,7 +92,7 @@ bool create_philos(t_data_philo **data)
   }
   return (false);
 }
-
+/*
 void philo_eat(t_philo *philo_ptr)
 {
     if ((data->id % 2) == 0)
@@ -110,14 +110,14 @@ void philo_eat(t_philo *philo_ptr)
       printf("Philosoper %d has taken a fork\n",data->id);
      }
      printf("Philosoper %d is eating\n",data->id);
-}
+}*/
 void simulation_running(t_philo *philo_ptr)
 {
   bool simulation_running = true;
 
   while(simulation_running)
   {
-    philo_eat(philo_ptr);
+    //philo_eat(philo_ptr);
     /*ATTENZIONE FUNZIONI DA IMPLEMENTARE LAVORARE SU QUESTE FUNZIONI SE POSSIBILE,
     SI CAPISCE COSA FANNO 
     philo_sleep();
@@ -141,7 +141,7 @@ void *philosophers_routine(void *philo_ptr)
   printf("philo id: %d data address = %p\n", philo->id, &philo->data);
 
 
-  printf("filosofo id :%d\n", data->id);
+//  printf("filosofo id :%d\n", data->id);
   simulation_running(philo);
   printf("hello world");
 }
