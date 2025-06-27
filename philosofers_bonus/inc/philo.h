@@ -26,7 +26,8 @@ typedef struct t_name_data_philo
 	int max_eat;
 	t_philo *philos;
 	pthread_t *ids;
-	pthread_mutex_t *forks;
+	// replaced mutexes with a semaphore
+	sem_t *forks;
 }	t_data_philo;
 
 

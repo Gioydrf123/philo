@@ -8,35 +8,38 @@
 //   return (now.tv_sec - start_time->tv_sec) * 1000 + (now.tv_usec - start_time->tv_usec) / 1000;
 // }
 
-void  free_p(t_data_philo **data)
+int  free_p(t_data_philo **data, short ret)
 {
   if ((*data)->forks)
-    free((*data)->forks);
+  {
+    int i;
+    i = (*data)->n_philo;
+    while(i-- > 0)
+      sem_destroy(&(*data)->forks);
+  }
+  // free((*data)->forks);
   if ((*data)->philos)
     free((*data)->philos);
   if ((*data)->ids)
     free((*data)->ids);
   if ((*data))
     free((*data));
+  return (ret);
 }
 
-int create_forks(t_data_philo **data)
+int create_sem_forks(t_data_philo **data)
 {
   int i;
   i = 0;
-  (*data)->forks = calloc(sizeof(pthread_mutex_t), (*data)->n_philo);
+
+  // semaphores have an integer inside their structure
+
   while (i < (*data)->n_philo)
   {
-    if (pthread_mutex_init(&(*data)->forks[i], NULL) != 0)
-		{
-			printf("error initializing forks!\n");
-			return (1);
-		}
+    // initializing array of semaphores
+    // TODO: add control for failing
+    sem_init(&(*data)->forks[i], 0, 1);
 		i++;
-  }
-  for(int i = 0;i<(*data)->n_philo; ++i)
-  {
-    printf("%p\n",&(*data)->forks[i]);
   }
   return (0);
 }
@@ -75,35 +78,43 @@ bool create_philos(t_data_philo **data)
   return (false);
 }
 
+// sem_post : like mutex unlock
+
 void philo_eat(t_philo *philo_ptr)
 {
     if ((data->id % 2) == 0)
      {
-      pthread_mutex_lock(&philo->data->forks[right_fork]);
-      printf("Philosoper %d has taken a fork\n",data->id);
-      pthread_mutex_lock(&philo->data->forks[left_fork]);
-      printf("Philosoper %d has taken a fork\n", data->id);
+      sem_wait((*data)->forks[right_fork]);
+      sem_wait((*data)->fors[left_fork]);
+        //pthread_mutex_lock(&philo->data->forks[right_fork]);
+        //printf("Philosoper %d has taken a fork\n",data->id);
+        //pthread_mutex_lock(&philo->data->forks[left_fork]);
+        //printf("Philosoper %d has taken a fork\n", data->id);
      }
      else
      {
-      pthread_mutex_lock(&philo->data->forks[left_fork]);
-      printf("Philosoper %d has taken a fork\n", data->id);
-      pthread_mutex_lock(&philo->data->forks[right_fork]);
-      printf("Philosoper %d has taken a fork\n",data->id);
+      sem_wait((*data)->forks[left_fork]);
+      sem_wait((*data)->fors[right_fork]);
+      // pthread_mutex_lock(&philo->data->forks[left_fork]);
+      // printf("Philosoper %d has taken a fork\n", data->id);
+      // pthread_mutex_lock(&philo->data->forks[right_fork]);
+      // printf("Philosoper %d has taken a fork\n",data->id);
      }
      printf("Philosoper %d is eating\n",data->id);
 }
+
 void simulation_running(t_philo *philo_ptr)
 {
   bool simulation_running = true;
 
   while(simulation_running)
   {
-    philo_eat(philo_ptr);
+    // philo_eat(philo_ptr);
     /*ATTENZIONE FUNZIONI DA IMPLEMENTARE LAVORARE SU QUESTE FUNZIONI SE POSSIBILE,
     SI CAPISCE COSA FANNO 
     philo_sleep();
     philo_think();*/
+    i++;
   }
 }
 
@@ -134,7 +145,6 @@ int init_routine(t_data_philo **data)
   i = 0;
   while (i < (*data)->n_philo)
   {
-    (*data)->id = i;
     if (pthread_create(&(*data)->ids[i], NULL, &philosophers_routine, &(*data)->philos[i]))
       return printf("error in thread creation\n");
     usleep(1);
@@ -151,19 +161,15 @@ int main(int argc, char **argv)
   t_data_philo *data = NULL;
   parse_input(argc, argv, &data);
   // updated create fork with semaphores
-  if (create_forks(&data))
-  {
-    free_p(&data);
-    return (1);
-  }
+  if (create_sem_forks(&data))
+    return (free_p(&data, 1));
+
+  ///////////////////////////////
   if (create_philos(&data))
-  {
-    free_p(&data);
-    return (1);
-  }
-  printf("original data address: %p\n", data);
+    return (free_p(&data, 1));
+  // printf("original data address: %p\n", data);
   init_routine(&data);
 
-  free_p(&data);
+  free_p(&data, 0);
   return (0);
 }
