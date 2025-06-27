@@ -4,6 +4,8 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <stdbool.h>
+// for semaphores
+#include <semaphore.h>
 
 typedef struct t_name_philo
 {
@@ -25,7 +27,6 @@ typedef struct t_name_data_philo
 	t_philo *philos;
 	pthread_t *ids;
 	pthread_mutex_t *forks;
-	int id;
 }	t_data_philo;
 
 

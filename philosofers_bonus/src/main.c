@@ -8,24 +8,6 @@
 //   return (now.tv_sec - start_time->tv_sec) * 1000 + (now.tv_usec - start_time->tv_usec) / 1000;
 // }
 
-// void	distribute_forks(t_controller *controller)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < controller->num_of_philos)
-// 	{
-// 		if (i == 0)
-// 			controller->philos[i].fork_r
-// 				= &controller->forks[controller->num_of_philos - 1];
-// 		else
-// 			controller->philos[i].fork_r = &controller->forks[i - 1];
-// 		controller->philos[i].fork_l = &controller->forks[i];
-// 		i++;
-// 	}
-// 	init_routine(controller);
-// }
-
 void  free_p(t_data_philo **data)
 {
   if ((*data)->forks)
@@ -92,7 +74,7 @@ bool create_philos(t_data_philo **data)
   }
   return (false);
 }
-/*
+
 void philo_eat(t_philo *philo_ptr)
 {
     if ((data->id % 2) == 0)
@@ -110,14 +92,14 @@ void philo_eat(t_philo *philo_ptr)
       printf("Philosoper %d has taken a fork\n",data->id);
      }
      printf("Philosoper %d is eating\n",data->id);
-}*/
+}
 void simulation_running(t_philo *philo_ptr)
 {
   bool simulation_running = true;
 
   while(simulation_running)
   {
-    //philo_eat(philo_ptr);
+    philo_eat(philo_ptr);
     /*ATTENZIONE FUNZIONI DA IMPLEMENTARE LAVORARE SU QUESTE FUNZIONI SE POSSIBILE,
     SI CAPISCE COSA FANNO 
     philo_sleep();
@@ -141,7 +123,7 @@ void *philosophers_routine(void *philo_ptr)
   printf("philo id: %d data address = %p\n", philo->id, &philo->data);
 
 
-//  printf("filosofo id :%d\n", data->id);
+  printf("filosofo id :%d\n", data->id);
   simulation_running(philo);
   printf("hello world");
 }
@@ -165,14 +147,10 @@ int init_routine(t_data_philo **data)
 int main(int argc, char **argv)
 {
   if (argc < 4 || argc > 5)
-  {
-    printf("error\n");
-    return (1);
-  }
-
+    return (printf("error\n"));
   t_data_philo *data = NULL;
-  // printf("%p\n", &data);
   parse_input(argc, argv, &data);
+  // updated create fork with semaphores
   if (create_forks(&data))
   {
     free_p(&data);
