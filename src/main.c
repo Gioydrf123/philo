@@ -76,7 +76,9 @@ bool create_philos(t_data_philo **data)
 {
   int i;
   i = 0;
+  //array di filosofi dentro data
   (*data)->philos = calloc(sizeof(t_philo), (*data)->n_philo);
+  //ids sono gli ids
   (*data)->ids = calloc(sizeof(pthread_t), (*data)->n_philo);
   if (!(*data)->philos || !(*data)->ids)
   {
@@ -116,7 +118,7 @@ void simulation_running(t_philo *philo_ptr)
   while(simulation_running)
   {
     philo_eat(philo_ptr);
-    /* ATTENZIONE FUNZIONI DA IMPLEMENTARE LAVORARE SU QUESTE FUNZIONI SE POSSIBILE
+    /*ATTENZIONE FUNZIONI DA IMPLEMENTARE LAVORARE SU QUESTE FUNZIONI SE POSSIBILE,
     SI CAPISCE COSA FANNO 
     philo_sleep();
     philo_think();*/
@@ -140,6 +142,7 @@ void *philosophers_routine(void *philo_ptr)
 
 
   printf("filosofo id :%d\n", data->id);
+  simulation_running(philo);
   printf("hello world");
 }
 
