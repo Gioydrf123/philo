@@ -27,9 +27,15 @@ typedef struct t_name_data_philo
 	pthread_t *ids;
 	pthread_mutex_t *forks;
 	//per stampa
-	pthread_mutex_t print;
+	pthread_mutex_t print_lock;
 	pthread_mutex_t sim;
 	bool simulation_running;
 }	t_data_philo;
 
-
+// Function Prototypes
+int	init_routine(t_data_philo **data);
+int	free_p(t_data_philo **data, short ret);
+void parse_input(int argc, char **argv, t_data_philo **data);
+void philo_eat(t_philo *philo_ptr);
+long get_timestamp(struct timeval *start_time);
+void	swap_int_philo(int *a, int *b);
