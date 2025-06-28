@@ -5,7 +5,7 @@ long get_timestamp(struct timeval *start_time)
 {
   struct timeval now;
   gettimeofday(&now, NULL);
-  return (now.tv_sec - start_time->tv_sec) * 1000 + (now.tv_usec - start_time->tv_usec) / 1000;
+  return (now.tv_sec - start_time->tv_sec)* 1000 + (now.tv_usec - start_time->tv_usec)/ 1000;
 }
 
 void  free_p(t_data_philo **data)
@@ -52,6 +52,7 @@ void parse_input(int argc, char **argv, t_data_philo **data)
     (*data)->max_eat = atoi(argv[5]);
   else
     (*data)->max_eat = -1;
+  (*data)->simulation_running = true;
 }
 
 bool create_philos(t_data_philo **data)
@@ -111,9 +112,7 @@ void philo_eat(t_philo *philo_ptr)
 
 void simulation_running(t_philo *philo_ptr)
 {
-  bool simulation_running = true;
-
-  while(simulation_running)
+  while(philo_ptr->data->simulation_running)
   {
     philo_eat(philo_ptr);
     /*ATTENZIONE FUNZIONI DA IMPLEMENTARE LAVORARE SU QUESTE FUNZIONI SE POSSIBILE,
@@ -127,19 +126,6 @@ void *philosophers_routine(void *philo_ptr)
 {
   t_philo *philo;
   philo = (t_philo *)philo_ptr;
-//  int left_fork = philo->id;
-//  int right_fork = (philo->id + 1) % philo->data->n_philo;
-  // bool simulation_running= true;
-
-//  printf("philo id: %d\n", philo->id);
-//  printf("philo id: %d left fork: %d\n",philo->id, left_fork);
-//  printf("philo id: %d pointer left fork: %p\n",philo->id, &philo->data->forks[left_fork]);
-//  printf("philo id: %d right fork: %d\n",philo->id, right_fork);
-//  printf("philo id: %d pointer right fork: %p\n",philo->id, &philo->data->forks[right_fork]);
-//  printf("philo id: %d data address = %p\n", philo->id, &philo->data);
-
-
-//  printf("filosofo id :%d\n", data->id);
   simulation_running(philo);
   return (NULL);
 }
@@ -151,9 +137,9 @@ int init_routine(t_data_philo **data)
   while (i < (*data)->n_philo)
   {
     (*data)->philos[i].id = i;
+    gettimeofday(&(*data)->start_time, NULL);
     if (pthread_create(&(*data)->ids[i], NULL, philosophers_routine, &(*data)->philos[i]))
       return printf("error in thread creation\n");
-    usleep(1);
     i++;
   }
   while (i-- > 0)
@@ -170,7 +156,6 @@ int main(int argc, char **argv)
   }
 
   t_data_philo *data = NULL;
-  // printf("%p\n", &data);
   parse_input(argc, argv, &data);
   if (create_forks(&data))
   {

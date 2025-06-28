@@ -4,11 +4,11 @@ CFLAGS = -g -pthread
 NAME = philo
 SRCS = ./src/main.c
 
-all : $(NAME)
-
-$(NAME) : $(SRCS)
+all :
 	$(CC) $(CFLAGS) $(SRCS) -o $(NAME)
-
+	rm $(NAME)
+	$(CC) $(CFLAGS) $(SRCS) -o $(NAME)
+#per pulire le schifezze
 clean:
 	rm $(NAME)
 
