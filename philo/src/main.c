@@ -21,14 +21,12 @@ bool create_philos(t_data_philo **data)
 {
   int i;
   i = 0;
-  //array di filosofi dentro data
+  // array di filosofi dentro data
   (*data)->philos = calloc(sizeof(t_philo), (*data)->n_philo);
-  //ids sono gli ids
+  // array di pthread 
   (*data)->ids = calloc(sizeof(pthread_t), (*data)->n_philo);
   if (!(*data)->philos || !(*data)->ids)
-  {
     return (true);
-  }
   while(i < (*data)->n_philo)
   {
     (*data)->philos[i].id = i;

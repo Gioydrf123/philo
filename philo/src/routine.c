@@ -33,7 +33,11 @@ int init_routine(t_data_philo **data)
   while (i < (*data)->n_philo)
   {
     (*data)->philos[i].id = i;
+    // changed non protected access to start_time
+    pthread_mutex_lock(&(*data)->time_lock);
     gettimeofday(&(*data)->start_time, NULL);
+    pthread_mutex_unlock(&(*data)->time_lock);
+
     if (pthread_create(&(*data)->ids[i], NULL, philosophers_routine, &(*data)->philos[i]))
       return printf("error in thread creation\n");
     // usleep(1);

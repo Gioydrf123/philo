@@ -3,7 +3,7 @@ CFLAGS = -g -pthread
 #  -Wall -Wextra -Werror -g
 NAME = philo
 SRCS = ./src/main.c ./src/routine.c ./src/utils.c ./src/parsing.c \
-		./src/actions.c
+		./src/actions/philo_eat.c
 
 all :
 	$(CC) $(CFLAGS) $(SRCS) -o $(NAME)
