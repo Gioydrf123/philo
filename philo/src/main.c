@@ -31,6 +31,8 @@ bool create_philos(t_data_philo **data)
   {
     (*data)->philos[i].id = i;
     (*data)->philos[i].data = (*data); 
+    // inizializzato meal_count a 0
+    (*data)->philos[i].meal_count = 0;
     i++;
   }
   return (false);
@@ -38,8 +40,8 @@ bool create_philos(t_data_philo **data)
 
 int main(int argc, char **argv)
 {
-  if (argc < 4 || argc > 5)
-    return (printf("error\n"), 1);
+  if (argc < 4 || argc > 6)
+    return (printf("arg error\n"), 1);
   t_data_philo *data = NULL;
   parse_input(argc, argv, &data);
   if (create_forks(&data))

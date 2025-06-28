@@ -8,7 +8,7 @@
 typedef struct t_name_philo
 {
 	int id;
- 
+	int meal_count;
 	// struct timeval *start_time;
 	// pthread_mutex_t *fork_left;
 	// pthread_mutex_t *fork_right;
@@ -27,9 +27,10 @@ typedef struct t_name_data_philo
 	pthread_t *ids;
 	pthread_mutex_t *forks;
 	//per stampa
+	pthread_mutex_t meal_lock;
 	pthread_mutex_t time_lock;
 	pthread_mutex_t print_lock;
-	pthread_mutex_t sim;
+	pthread_mutex_t sim_lock;
 	bool simulation_running;
 }	t_data_philo;
 

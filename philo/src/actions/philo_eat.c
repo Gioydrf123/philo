@@ -3,9 +3,12 @@
 static void take_forks(t_philo *philo_ptr, int left_fork, int right_fork)
 {
 	pthread_mutex_lock(&philo_ptr->data->forks[right_fork]);
-    printf("[%ld] Philosoper %d has taken a fork\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
     pthread_mutex_lock(&philo_ptr->data->forks[left_fork]);
+	// lock for timestamps
+	pthread_mutex_lock(&philo_ptr->data->time_lock);
     printf("[%ld] Philosoper %d has taken a fork\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
+    printf("[%ld] Philosoper %d has taken a fork\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
+	pthread_mutex_unlock(&philo_ptr->data->time_lock);
 }
 
 static void forks_down(t_philo *philo_ptr, int left_fork, int right_fork)
@@ -40,10 +43,12 @@ void philo_eat(t_philo *philo_ptr)
         printf("[%ld] Philosoper %d is died\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
         pthread_mutex_unlock(&philo_ptr->data->time_lock);
 
-		pthread_mutex_lock(&philo_ptr->data->sim);
+		pthread_mutex_lock(&philo_ptr->data->sim_lock);
 		philo_ptr->data->simulation_running = false;
-		pthread_mutex_unlock(&philo_ptr->data->sim);
+		pthread_mutex_unlock(&philo_ptr->data->sim_lock);
 	}
 	// leaving forks
 	forks_down(philo_ptr, left_fork, right_fork);
+	// incrementing meal count after eating
+	philo_ptr->meal_count++;
 }
