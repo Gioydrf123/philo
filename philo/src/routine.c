@@ -1,5 +1,11 @@
 #include "../inc/philo.h"
 
+static void philo_sleep(t_philo *philo_ptr)
+{
+  usleep(philo_ptr->data->tt_sleep);
+  printf("philo: %d is sleeping\n", philo_ptr->id);
+}
+
 static void simulation_running(t_philo *philo_ptr)
 {
   // represents meal count
@@ -16,7 +22,9 @@ static void simulation_running(t_philo *philo_ptr)
       break ;
     }
     pthread_mutex_unlock(&philo_ptr->data->meal_lock);
+    
 
+    philo_sleep(philo_ptr);
 
     pthread_mutex_lock(&philo_ptr->data->sim_lock);
     if (philo_ptr->data->simulation_running == false)
