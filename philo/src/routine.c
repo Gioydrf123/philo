@@ -11,13 +11,19 @@ static void simulation_running(t_philo *philo_ptr)
     // added exiting condition for max_meals
     pthread_mutex_lock(&philo_ptr->data->meal_lock);
     if (philo_ptr->data->max_eat > 0 && philo_ptr->meal_count >= philo_ptr->data->max_eat)
+    {
+      pthread_mutex_unlock(&philo_ptr->data->meal_lock);
       break ;
+    }
     pthread_mutex_unlock(&philo_ptr->data->meal_lock);
 
 
     pthread_mutex_lock(&philo_ptr->data->sim_lock);
     if (philo_ptr->data->simulation_running == false)
+    {
+      pthread_mutex_unlock(&philo_ptr->data->sim_lock);
       break ;
+    }
     pthread_mutex_unlock(&philo_ptr->data->sim_lock);
     /*ATTENZIONE FUNZIONI DA IMPLEMENTARE LAVORARE SU QUESTE FUNZIONI SE POSSIBILE,
     SI CAPISCE COSA FANNO 
@@ -25,7 +31,6 @@ static void simulation_running(t_philo *philo_ptr)
     philo_think();*/
     i++;
   }
-	pthread_mutex_unlock(&philo_ptr->data->sim_lock);
 }
 
 static void *philosophers_routine(void *philo_ptr)
