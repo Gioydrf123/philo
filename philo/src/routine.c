@@ -24,7 +24,7 @@ static void simulation_running(t_philo *philo_ptr)
     pthread_mutex_unlock(&philo_ptr->data->meal_lock);
     
 
-    philo_sleep(philo_ptr);
+//    philo_sleep(philo_ptr);
 
     pthread_mutex_lock(&philo_ptr->data->sim_lock);
     if (philo_ptr->data->simulation_running == false)

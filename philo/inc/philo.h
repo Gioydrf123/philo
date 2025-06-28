@@ -41,3 +41,4 @@ void parse_input(int argc, char **argv, t_data_philo **data);
 void philo_eat(t_philo *philo_ptr);
 long get_timestamp(struct timeval *start_time);
 void	swap_int_philo(int *a, int *b);
+void print_philo_lock(t_philo *philo_ptr, char *s);

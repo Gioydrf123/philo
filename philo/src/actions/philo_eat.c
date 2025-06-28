@@ -1,54 +1,61 @@
 #include "../../inc/philo.h"
 
-static void take_forks(t_philo *philo_ptr, int left_fork, int right_fork)
+void print_philo_lock(t_philo *philo_ptr, char *s)
 {
-	pthread_mutex_lock(&philo_ptr->data->forks[right_fork]);
-    pthread_mutex_lock(&philo_ptr->data->forks[left_fork]);
-	// lock for timestamps
 	pthread_mutex_lock(&philo_ptr->data->time_lock);
-    printf("[%ld] Philosoper %d has taken a fork\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
-    printf("[%ld] Philosoper %d has taken a fork\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
-	pthread_mutex_unlock(&philo_ptr->data->time_lock);
+    printf("[%ld] Philosoper %d ", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
+	printf("%s\n", s);
+    pthread_mutex_unlock(&philo_ptr->data->time_lock);
+
 }
 
-static void forks_down(t_philo *philo_ptr, int left_fork, int right_fork)
-{
-	pthread_mutex_unlock(&philo_ptr->data->forks[right_fork]);
-	pthread_mutex_unlock(&philo_ptr->data->forks[left_fork]);
-}
-
-// un po di orgine extra pls
 void philo_eat(t_philo *philo_ptr)
 {
-	//da implementare un mutex per impedire race condition su stampa
 	int right_fork = (philo_ptr->id + 1) % philo_ptr->data->n_philo;
 	int left_fork = philo_ptr->id;
 
-	// fra ma questo che cazzo e???
+    //	printf("tempo teorico 1: %d\n",philo_ptr->data->tt_die);
+    //	printf("tempo teorico 2: %d\n",philo_ptr->data->tt_eat);
 	if ((philo_ptr->id % 2) == 0)
 		swap_int_philo(&right_fork, &left_fork);
+    pthread_mutex_lock(&philo_ptr->data->forks[right_fork]);
 
-	// taking forks
-	take_forks(philo_ptr, left_fork, right_fork);
 
+
+/*	pthread_mutex_lock(&philo_ptr->data->time_lock);
+    printf("[%ld] Philosoper %d has taken a fork\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
+    pthread_mutex_unlock(&philo_ptr->data->time_lock);*/
+	print_philo_lock(philo_ptr, "has taken a fork");
+
+
+
+    pthread_mutex_lock(&philo_ptr->data->forks[left_fork]);
+
+/*
 	pthread_mutex_lock(&philo_ptr->data->time_lock);
+    printf("[%ld] Philosoper %d has taken a fork\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
     printf("[%ld] Philosoper %d is eating\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
-	pthread_mutex_unlock(&philo_ptr->data->time_lock);
+	pthread_mutex_unlock(&philo_ptr->data->time_lock);*/
+	print_philo_lock(philo_ptr, "has taken a fork");
+	print_philo_lock(philo_ptr, "is eating");
+
 
 	if(philo_ptr->data->tt_die - philo_ptr->data->tt_eat < 0)
 	{
 		usleep(philo_ptr->data->tt_die * 1000);
         // added print_lock
-        pthread_mutex_lock(&philo_ptr->data->time_lock);
+        /*
+		pthread_mutex_lock(&philo_ptr->data->time_lock);
         printf("[%ld] Philosoper %d is died\n", get_timestamp(&philo_ptr->data->start_time), philo_ptr->id);
         pthread_mutex_unlock(&philo_ptr->data->time_lock);
+		*/
+		print_philo_lock(philo_ptr, "is died");
 
 		pthread_mutex_lock(&philo_ptr->data->sim_lock);
 		philo_ptr->data->simulation_running = false;
 		pthread_mutex_unlock(&philo_ptr->data->sim_lock);
-	}
-	// leaving forks
-	forks_down(philo_ptr, left_fork, right_fork);
-	// incrementing meal count after eating
+	}	
+	pthread_mutex_unlock(&philo_ptr->data->forks[right_fork]);
+	pthread_mutex_unlock(&philo_ptr->data->forks[left_fork]);
 	philo_ptr->meal_count++;
 }
