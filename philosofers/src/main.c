@@ -1,12 +1,12 @@
 #include "../inc/philo.h"
 
 
-// long get_timestamp(struct timeval *t/ime_start)
-// {
-//   struct timeval now;
-//   gettimeofday(&now, NULL);
-//   return (now.tv_sec - start_time->tv_sec) * 1000 + (now.tv_usec - start_time->tv_usec) / 1000;
-// }
+long get_timestamp(struct timeval *start_time)
+{
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  return (now.tv_sec - start_time->tv_sec) * 1000 + (now.tv_usec - start_time->tv_usec) / 1000;
+}
 
 void  free_p(t_data_philo **data)
 {
@@ -75,6 +75,15 @@ bool create_philos(t_data_philo **data)
   return (false);
 }
 
+void	swap_int_philo(int *a, int *b)
+{
+	int	tmp;
+
+	tmp = *a;
+	*a=*b;
+	*b = tmp;
+}
+
 void philo_eat(t_philo *philo_ptr)
 {
 	//da implementare un mutex per impedire race condition su stampa
@@ -118,21 +127,21 @@ void *philosophers_routine(void *philo_ptr)
 {
   t_philo *philo;
   philo = (t_philo *)philo_ptr;
-  int left_fork = philo->id;
-  int right_fork = (philo->id + 1) % philo->data->n_philo;
+//  int left_fork = philo->id;
+//  int right_fork = (philo->id + 1) % philo->data->n_philo;
   // bool simulation_running= true;
 
-  printf("philo id: %d\n", philo->id);
-  printf("philo id: %d left fork: %d\n",philo->id, left_fork);
-  printf("philo id: %d pointer left fork: %p\n",philo->id, &philo->data->forks[left_fork]);
-  printf("philo id: %d right fork: %d\n",philo->id, right_fork);
-  printf("philo id: %d pointer right fork: %p\n",philo->id, &philo->data->forks[right_fork]);
-  printf("philo id: %d data address = %p\n", philo->id, &philo->data);
+//  printf("philo id: %d\n", philo->id);
+//  printf("philo id: %d left fork: %d\n",philo->id, left_fork);
+//  printf("philo id: %d pointer left fork: %p\n",philo->id, &philo->data->forks[left_fork]);
+//  printf("philo id: %d right fork: %d\n",philo->id, right_fork);
+//  printf("philo id: %d pointer right fork: %p\n",philo->id, &philo->data->forks[right_fork]);
+//  printf("philo id: %d data address = %p\n", philo->id, &philo->data);
 
 
-  printf("filosofo id :%d\n", data->id);
+//  printf("filosofo id :%d\n", data->id);
   simulation_running(philo);
-  printf("hello world");
+  return (NULL);
 }
 
 int init_routine(t_data_philo **data)
@@ -141,14 +150,15 @@ int init_routine(t_data_philo **data)
   i = 0;
   while (i < (*data)->n_philo)
   {
-    (*data)->id = i;
-    if (pthread_create(&(*data)->ids[i], NULL, &philosophers_routine, &(*data)->philos[i]))
+    (*data)->philos[i].id = i;
+    if (pthread_create(&(*data)->ids[i], NULL, philosophers_routine, &(*data)->philos[i]))
       return printf("error in thread creation\n");
     usleep(1);
     i++;
   }
   while (i-- > 0)
 		pthread_join((*data)->ids[i], NULL);
+	return (0);
 }
 
 int main(int argc, char **argv)

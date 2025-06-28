@@ -22,9 +22,13 @@ typedef struct t_name_data_philo
 	int tt_sleep;
 	int tt_die;
 	int max_eat;
+	struct timeval	start_time;
 	t_philo *philos;
 	pthread_t *ids;
 	pthread_mutex_t *forks;
+	//per stampa
+	pthread_mutex_t print;
+	bool simulation_running;
 }	t_data_philo;
 
 
