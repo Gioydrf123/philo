@@ -28,6 +28,7 @@ typedef struct t_name_data_philo
 	pthread_mutex_t *forks;
 	//per stampa
 	pthread_mutex_t print;
+	pthread_mutex_t sim;
 	bool simulation_running;
 }	t_data_philo;
 
