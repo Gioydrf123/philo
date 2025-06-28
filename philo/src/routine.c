@@ -2,8 +2,25 @@
 
 static void philo_sleep(t_philo *philo_ptr)
 {
-  usleep(philo_ptr->data->tt_sleep);
-  printf("philo: %d is sleeping\n", philo_ptr->id);
+//PER IL MOMENTO E' COSI' BISOGNA SOSTITUIRE CON I WRITE NEI PRINTF
+//  printf("tt_sleep : %d\n", philo_ptr->data->tt_sleep);
+//  printf("tt_die : %d\n", philo_ptr->data->tt_die);
+//  printf("controllo : %d\n", philo_ptr->data->tt_sleep - philo_ptr->data->tt_die);
+  if ((philo_ptr->data->tt_sleep - philo_ptr->data->tt_die) > 0)
+  {
+ 		print_philo_lock(philo_ptr, "is sleeping1");
+    usleep((philo_ptr->data->tt_die) * 1000);
+ 		print_philo_lock(philo_ptr, "is died");
+ 		pthread_mutex_lock(&philo_ptr->data->sim_lock);
+		philo_ptr->data->simulation_running = false;
+		pthread_mutex_unlock(&philo_ptr->data->sim_lock);
+
+  }
+  else
+  {
+ 		print_philo_lock(philo_ptr, "is sleeping2");
+    usleep(philo_ptr->data->tt_sleep * 1000);
+  }
 }
 
 static void simulation_running(t_philo *philo_ptr)
@@ -24,7 +41,7 @@ static void simulation_running(t_philo *philo_ptr)
     pthread_mutex_unlock(&philo_ptr->data->meal_lock);
     
 
-//    philo_sleep(philo_ptr);
+    philo_sleep(philo_ptr);
 
     pthread_mutex_lock(&philo_ptr->data->sim_lock);
     if (philo_ptr->data->simulation_running == false)
@@ -37,7 +54,6 @@ static void simulation_running(t_philo *philo_ptr)
     SI CAPISCE COSA FANNO 
     philo_sleep();
     philo_think();*/
-    i++;
   }
 }
 

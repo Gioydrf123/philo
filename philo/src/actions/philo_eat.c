@@ -54,7 +54,8 @@ void philo_eat(t_philo *philo_ptr)
 		pthread_mutex_lock(&philo_ptr->data->sim_lock);
 		philo_ptr->data->simulation_running = false;
 		pthread_mutex_unlock(&philo_ptr->data->sim_lock);
-	}	
+	}
+	usleep(philo_ptr->data->tt_eat * 1000);
 	pthread_mutex_unlock(&philo_ptr->data->forks[right_fork]);
 	pthread_mutex_unlock(&philo_ptr->data->forks[left_fork]);
 	philo_ptr->meal_count++;
