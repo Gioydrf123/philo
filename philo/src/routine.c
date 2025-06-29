@@ -85,7 +85,23 @@ static void simulation_running(t_philo *philo_ptr)
     }
     pthread_mutex_unlock(&philo_ptr->data->sim_lock);
 
+
+
+
+
     philo_think(philo_ptr);
+
+
+
+
+
+    pthread_mutex_lock(&philo_ptr->data->sim_lock);
+    if (philo_ptr->data->simulation_running == false)
+    {
+      pthread_mutex_unlock(&philo_ptr->data->sim_lock);
+      break ;
+    }
+    pthread_mutex_unlock(&philo_ptr->data->sim_lock);
   }
 }
 
