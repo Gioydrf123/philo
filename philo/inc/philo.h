@@ -42,3 +42,4 @@ void philo_eat(t_philo *philo_ptr);
 long get_timestamp(struct timeval *start_time);
 void	swap_int_philo(int *a, int *b);
 void print_philo_lock(t_philo *philo_ptr, char *s);
+void sleep_ms(long ms);

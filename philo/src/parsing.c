@@ -11,5 +11,9 @@ void parse_input(int argc, char **argv, t_data_philo **data)
     (*data)->max_eat = atoi(argv[5]);
   else
     (*data)->max_eat = -1;
+  printf("numero filosofi : %d\n",(*data)->n_philo);
+  printf("time to die : %d\n",(*data)->tt_die);
+  printf("time to eat : %d\n",(*data)->tt_eat);
+  printf("time to sleep : %d\n",(*data)->tt_sleep);
   (*data)->simulation_running = true;
 }
