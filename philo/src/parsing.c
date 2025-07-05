@@ -1,35 +1,32 @@
 #include "../inc/philo.h"
 
-#include "../inc/philo.h"
-
 static int	ft_isdigit_philo(int c)
 {
 	if (!(c >= '0' && c <= '9'))
-	{
-		printf("Error format only digits\n");
-		exit (1);
-	}
+		return (0);
 	return (1);
 }
 
 static long	ft_atol_philo(const char *str)
 {
 	long	value;
-	int		sign;
 
-	sign = 1;
 	value = 0;
 	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
 		str++;
-	while (ft_isdigit_philo(*str))
+	while (*str)
 	{
-		value = value * 10 + (*str++ - '0');
-		if (value > 2147483648 && sign == -1)
-			return (sign * value);
-		if (value > 2147483647 && sign == 1)
-			return (sign * value);
+		if (!ft_isdigit_philo(*str))
+		{
+			printf("Error only digits\n");
+			exit (1);
+		}
+		value = value * 10 + (*str - '0');
+		if (value > 2147483647)
+			return (value);
+		str++;
 	}
-	return (sign * value);
+	return (value);
 }
 
 static int	ft_atoi_philo(const char *str)
@@ -48,16 +45,32 @@ static int	ft_atoi_philo(const char *str)
 	return (sign * value);
 }
 
-void	parse_input(int argc, char **argv, t_data_philo **data)
+bool	check_min_max(int argc, char **argv)
 {
 	long	check_data[5];
+	int		i;
 
+	i = 0;
 	check_data[0] = ft_atol_philo(argv[1]);
 	check_data[1] = ft_atol_philo(argv[2]);
 	check_data[2] = ft_atol_philo(argv[3]);
 	check_data[3] = ft_atol_philo(argv[4]);
+	while (i < 4)
+		if (check_data[i] <= 0 || check_data[i++] > 2147483648)
+			return (printf("Error max in or negative int\n"), true);
 	if (argc == 6)
+	{
 		check_data[4] = ft_atol_philo(argv[5]);
+		if (check_data[4] <= 0 || check_data[4] > 2147483648)
+			return (printf("Error max in or negative int\n"), true);
+	}
+	return (false);
+}
+
+void	parse_input(int argc, char **argv, t_data_philo **data)
+{
+	if (check_min_max(argc, argv))
+		exit (1);
 	*data = calloc(sizeof(t_data_philo), 1);
 	(*data)->n_philo = ft_atoi_philo(argv[1]);
 	(*data)->tt_die = ft_atoi_philo(argv[2]);
