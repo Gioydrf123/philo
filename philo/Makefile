@@ -8,7 +8,6 @@ SRCS = ./src/main.c ./src/routine.c ./src/utils.c ./src/parsing.c \
 all :
 	$(CC) $(CFLAGS) $(SRCS) -o $(NAME)
 
-#per pulire le schifezze
 clean:
 	rm $(NAME)
 
@@ -16,5 +15,4 @@ fclean: clean
 
 re: fclean all
 
-# .PHONYall clean fclean re
-
+.PHONY: all clean fclean re
