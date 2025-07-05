@@ -18,7 +18,7 @@ static long	ft_atol_philo(const char *str)
 	{
 		if (!ft_isdigit_philo(*str))
 		{
-			printf("Error only digits\n");
+			printf("Error - only digits allowed\n");
 			exit (1);
 		}
 		value = value * 10 + (*str - '0');
@@ -57,12 +57,12 @@ bool	check_min_max(int argc, char **argv)
 	check_data[3] = ft_atol_philo(argv[4]);
 	while (i < 4)
 		if (check_data[i] <= 0 || check_data[i++] > 2147483648)
-			return (printf("Error max in or negative int\n"), true);
+			return (printf("Error - max int or negative int\n"), true);
 	if (argc == 6)
 	{
 		check_data[4] = ft_atol_philo(argv[5]);
 		if (check_data[4] <= 0 || check_data[4] > 2147483648)
-			return (printf("Error max in or negative int\n"), true);
+			return (printf("Error - max in or negative int\n"), true);
 	}
 	return (false);
 }
