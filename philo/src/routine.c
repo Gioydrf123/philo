@@ -22,7 +22,7 @@ static void	philo_eat(t_philo *philo_ptr)
 
 	right_fork = (philo_ptr->id + 1) % philo_ptr->data->n_philo;
 	left_fork = philo_ptr->id;
-	if ((philo_ptr->id % 2) == 0)
+	if ((philo_ptr->id % 2) == 1)
 		swap_int_philo(&right_fork, &left_fork);
 	pthread_mutex_lock(&philo_ptr->data->forks[right_fork]);
 	print_philo_lock(philo_ptr, " has taken a fork\n");
