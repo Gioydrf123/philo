@@ -18,6 +18,8 @@ static int	init_routine(t_data_philo **data)
 	pthread_create(&monitor, NULL, monitor_routine, *data);
 	while (i < (*data)->n_philo)
 	{
+		if ((*data)->n_philo % 2 == 1)
+			usleep(100);
 		(*data)->philos[i].id = i;
 		pthread_mutex_lock(&(*data)->time_lock);
 		gettimeofday(&(*data)->start_time, NULL);
